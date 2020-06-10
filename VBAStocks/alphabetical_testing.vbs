@@ -6,14 +6,14 @@ Sub StockMarket():
 ' Set an initial variable for holding the total per ticker
 
     Dim VolumeTotal As Double
-    volume_total = 0 
+    volume_total = 0
 
 ' Keep track of the location for each ticker in the summary table
 
     Dim Summary_Table_Row As Integer
     Summary_Table_Row = 2
 
-' Identify last row 
+' Identify last row
 
     lastrow = Cells(Rows.Count, 1).End(xlUp).Row
 
@@ -21,7 +21,7 @@ Sub StockMarket():
 
     For i = 2 To lastrow
 
-' Loop to calculate total volume and summarize tickers 
+' Loop to calculate total volume and summarize tickers
 ' Check if we are still within the same ticker, if it is not...
 
     If Cells(i, 1).Value <> Cells(i + 1, 1).Value Then
@@ -29,11 +29,11 @@ Sub StockMarket():
         ' Set the ticker name
         TickerName = Cells(i, 1).Value
 
-        ' Add to the ticker Total
-        VolumeTotal = VolumeTotal + Cells(i, 7).Value
-
         ' Print the ticker in the Summary Table
         Range("I" & Summary_Table_Row).Value = TickerName
+
+        ' Add to the ticker Total
+        VolumeTotal = VolumeTotal + Cells(i, 7).Value
         
         ' Print the volume total to the Summary Table
         Range("L" & Summary_Table_Row).Value = VolumeTotal
@@ -43,29 +43,39 @@ Sub StockMarket():
         
         ' Reset the Brand Total
         VolumeTotal = 0
+        
+        ClosingPrice = Cells(i, 6)
+        Range("N" & Summary_Table_Row - 1).Value = ClosingPrice
 
         ' If the cell immediately following a row is the same ticker...
-        Else
+        
+        Elseif Cells(i, 1).Value <> Cells(i - 1, 1).Value Then
+
+        OpeningPrice = Cells(i, 3)
+        Range("M" & Summary_Table_Row).Value = OpeningPrice
+
         
         ' Add to the ticker Total
-        VolumeTotal = VolumeTotal + Cells(i, 7).Value
+        VolumeTotal = Cells(i, 7).Value
 
+        Else 
+        VolumeTotal = VolumeTotal + Cells(i, 7)
+           
     End If
 
-  Next i
+    Next i
 
 End Sub
 
 
-  
-  
 
-    
-   
 
-      
+        OpeningPrice = Cells(i, 3)
 
-End Sub
+        Range("J" & Summary_Table_Row).Value = ClosingPrice - OpeningPrice
+        Range("K" & Summary_Table_Row).Value = (ClosingPrice - OpeningPrice) / OpeningPrice
+        Range("M" & Summary_Table_Row).Value = OpeningPrice
+        Range("N", & Summary_Table_Row).Value = ClosingPrice - 1
 
 Dim close_price As Double
     Dim open_price As Double
