@@ -12,6 +12,7 @@ Sub tickers()
 
     ' location summary tab 
     locationSumTab = 2
+    volume = 0
 
     ' identify the range 
     rowCount = Cells(Rows.Count, "A").End(xlUp).Row
@@ -28,10 +29,7 @@ Sub tickers()
             openingPrice = Cells(c, 3).Value
             'Range("N" & locationSumTab).Value = openingPrice
 
-            ' capture volume
-            volume = Cells(c, 7).Value
-
-        ElseIf Cells(c, 1).Value <> Cells(c + 1, 1).Value Then
+        Elseif Cells(c, 1).Value <> Cells(c + 1, 1).Value Then
             closingPrice = Cells(c, 6).Value
             ' Range("O" & locationSumTab).Value = closingPrice
 
@@ -43,9 +41,21 @@ Sub tickers()
             percentageChange = (closingPrice - openingPrice) / openingPrice
             Range("K" & locationSumTab).Value = percentageChange
 
+            ' capture volume
+            volume = volume + Cells(c, 7).Value
+            Range("L" & locationSumTab).Value = volume
+
             ' move to the next row
             locationSumTab = locationSumTab + 1
+
+            volume = 0
+
+        Else
+            ' capture volume
+            volume = volume + Cells(c, 7).Value
+
         End If
+
     Next c
 
 End Sub
