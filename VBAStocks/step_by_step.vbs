@@ -5,8 +5,8 @@ Sub tickers()
     Dim c As Long
     Dim locationSumTab As Integer
     Dim volume As Double
-    Dim openingPrice As Integer
-    Dim closingPrice As Integer
+    Dim openingPrice As Single
+    Dim closingPrice As Single
     Dim percentageChange As Single
     Dim netChange As Single
 
@@ -26,12 +26,14 @@ Sub tickers()
 
             ' capture opening price to summary table
             openingPrice = Cells(c, 3).Value
-            Range("N" & locationSumTab).Value = openingPrice
+            'Range("N" & locationSumTab).Value = openingPrice
 
+            ' capture volume
+            volume = Cells(c, 7).Value
 
         ElseIf Cells(c, 1).Value <> Cells(c + 1, 1).Value Then
             closingPrice = Cells(c, 6).Value
-            Range("O" & locationSumTab).Value = closingPrice
+            ' Range("O" & locationSumTab).Value = closingPrice
 
             ' calculate change 
             netChange = closingPrice - openingPrice
