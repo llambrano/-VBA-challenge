@@ -9,10 +9,12 @@ Sub tickers()
     Dim closingPrice As Single
     Dim percentageChange As Single
     Dim netChange As Single
+    Dim j As Integer
 
     ' location summary tab 
     locationSumTab = 2
     volume = 0
+    j = 2
 
     ' identify the range 
     rowCount = Cells(Rows.Count, "A").End(xlUp).Row
@@ -44,11 +46,23 @@ Sub tickers()
             ' capture volume
             volume = volume + Cells(c, 7).Value
             Range("L" & locationSumTab).Value = volume
+            
+            ' reset volume
+            volume = 0
+
+            ' color netChamnge
+            Select Case netChange
+
+            Case is => 0
+                Range("J" & locationSumTab).Interior.ColorIndex = 4
+            
+            Case is < 0
+                Range("J" & locationSumTab).Interior.ColorIndex = 3
+
+            End Select
 
             ' move to the next row
             locationSumTab = locationSumTab + 1
-
-            volume = 0
 
         Else
             ' capture volume
