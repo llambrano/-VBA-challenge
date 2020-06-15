@@ -14,7 +14,6 @@ Sub tickers()
     ' location summary tab 
     locationSumTab = 2
     volume = 0
-    j = 2
 
     ' identify the range 
     rowCount = Cells(Rows.Count, "A").End(xlUp).Row
@@ -54,10 +53,10 @@ Sub tickers()
             Select Case netChange
 
             Case is => 0
-                Range("J" & locationSumTab).Interior.ColorIndex = 4
+                Range("J" & locationSumTab).Interior.Color = 10202109
             
             Case is < 0
-                Range("J" & locationSumTab).Interior.ColorIndex = 3
+                Range("J" & locationSumTab).Interior.Color = 11854022
 
             End Select
 
@@ -72,9 +71,29 @@ Sub tickers()
 
     Next c
 
+    ' define range to find highest and lowest
+    Set percRange = Worksheets("A").Range("K:K")
+    
+    ' finding max % change
+    perMax = Excel.WorksheetFunction.Max(percRange)
+    Range("N2") = "Greatest Percentage Increse"
+    Range("O2").NumberFormat = ("0.0%")
+    Range("O2") = perMax
+    
+    ' finding min % change
+    perMin = Excel.WorksheetFunction.Min(percRange)
+    Range("N3") = "Greatest Percentage Decrese"
+    Range("O3").NumberFormat = ("0.0%")
+    Range("O3") = perMin
+
+    ' finding greatest total volume
+    Set volRange = Worksheets("A").Range("L:L")
+
+    maxVol = Excel.WorksheetFunction.Max(volRange)
+    Range("N4") = "Greatest Total Volume"
+    Range("O4").NumberFormat = ("#,##0_ ;-#,##0")
+    Range("O4") = maxVol
+
 End Sub
-
-
-
 
 
