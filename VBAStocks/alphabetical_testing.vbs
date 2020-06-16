@@ -1,100 +1,91 @@
-Sub StockMarket():
+Sub tickers()
 
-' Set an initial variable for holding the ticker name
-    Dim TickerName As String
+    ' declare vars
+    Dim ticker As String
+    Dim c As Long
+    Dim locationSumTab As Integer
+    Dim volume As Double
+    Dim openingPrice As Single
+    Dim closingPrice As Single
+    Dim percentageChange As Single
+    Dim netChange As Single
+    Dim j As Integer
 
-' Set an initial variable for holding the total per ticker
+    ' location summary tab 
+    locationSumTab = 2
+    volume = 0
 
-    Dim VolumeTotal As Double
-    volume_total = 0
+    ' identify the range 
+    rowCount = Cells(Rows.Count, "A").End(xlUp).Row
 
-' Keep track of the location for each ticker in the summary table
-
-    Dim Summary_Table_Row As Integer
-    Summary_Table_Row = 2
-
-' Identify last row
-
-    lastrow = Cells(Rows.Count, 1).End(xlUp).Row
-
-' Loop through ticker quotes
-
-    For i = 2 To lastrow
-
-' Loop to calculate total volume and summarize tickers
-' Check if we are still within the same ticker, if it is not...
-
-    If Cells(i, 1).Value <> Cells(i + 1, 1).Value Then
-
-        ' Set the ticker name
-        TickerName = Cells(i, 1).Value
-
-        ' Print the ticker in the Summary Table
-        Range("I" & Summary_Table_Row).Value = TickerName
-
-        ' Add to the ticker Total
-        VolumeTotal = VolumeTotal + Cells(i, 7).Value
+    ' get tickers | Identify if previous ticker is <>
+    For c = 2 To rowCount
+        If Cells(c, 1).Value <> Cells(c - 1, 1).Value Then
         
-        ' Print the volume total to the Summary Table
-        Range("L" & Summary_Table_Row).Value = VolumeTotal
+            ' add ticker to summary table 
+            ticker = Cells(c, 1).Value
+            Range("I" & locationSumTab).Value = ticker
 
-        ' Add one to the summary table row
-        Summary_Table_Row = Summary_Table_Row + 1
-        
-        ' Reset the Brand Total
-        VolumeTotal = 0
-        
-        ClosingPrice = Cells(i, 6)
-        Range("N" & Summary_Table_Row - 1).Value = ClosingPrice
+            ' capture opening price to summary table
+            openingPrice = Cells(c, 3).Value
+            'Range("N" & locationSumTab).Value = openingPrice
 
-        ' If the cell immediately following a row is the same ticker...
-        
-        Elseif Cells(i, 1).Value <> Cells(i - 1, 1).Value Then
+        Elseif Cells(c, 1).Value <> Cells(c + 1, 1).Value Then
+            closingPrice = Cells(c, 6).Value
+            ' Range("O" & locationSumTab).Value = closingPrice
 
-        OpeningPrice = Cells(i, 3)
-        Range("M" & Summary_Table_Row).Value = OpeningPrice
+            ' calculate change 
+            netChange = closingPrice - openingPrice
+            Range("J" & locationSumTab).Value = netChange
 
-        
-        ' Add to the ticker Total
-        VolumeTotal = Cells(i, 7).Value
+            ' calculate percentage change
+            percentageChange = (closingPrice - openingPrice) / openingPrice
+            Range("K" & locationSumTab).Value = percentageChange
 
-        Else 
-        VolumeTotal = VolumeTotal + Cells(i, 7)
-           
-    End If
+            ' capture volume
+            volume = volume + Cells(c, 7).Value
+            Range("L" & locationSumTab).Value = volume
+            
+            ' reset volume
+            volume = 0
 
-    Next i
+            ' color netChamnge
+            Select Case netChange
 
-End Sub
+            Case is => 0
+                Range("J" & locationSumTab).Interior.Color = 10202109
+            
+            Case is < 0
+                Range("J" & locationSumTab).Interior.Color = 11854022
 
+            End Select
 
+            ' move to the next row
+            locationSumTab = locationSumTab + 1
 
-
-        OpeningPrice = Cells(i, 3)
-
-        Range("J" & Summary_Table_Row).Value = ClosingPrice - OpeningPrice
-        Range("K" & Summary_Table_Row).Value = (ClosingPrice - OpeningPrice) / OpeningPrice
-        Range("M" & Summary_Table_Row).Value = OpeningPrice
-        Range("N", & Summary_Table_Row).Value = ClosingPrice - 1
-
-Dim close_price As Double
-    Dim open_price As Double
-    Dim yearlychange As Integer
-
-Y = 2
-
-    For x = 1 To 80000
-        If Cells(x + 1, 1).Value = Cells(x + 2, 1) Then
-            If Cells(x + 1, 2).Value = 20160101 Then
-                open_price = Cells(x + 1, 3).Value
-            End If
         Else
-             close_price = Cells(x + 1, 6).Value
-             Cells(Y, 9).Value = Cells(x + 1, 1).Value
-             Cells(Y, 10).Value = close_price - open_price
-             Cells(Y, 11).Value = (close_price - open_price) / open_price
-             Y = 1 + Y
+            ' capture volume
+            volume = volume + Cells(c, 7).Value
+
         End If
-    Next x
+
+    Next c
+
+        ' take the max and min and place them in a separate part in the worksheet
+    Range("P2") = "%" & WorksheetFunction.Max(Range("K2:K" & rowCount)) * 100
+    Range("P3") = "%" & WorksheetFunction.Min(Range("K2:K" & rowCount)) * 100
+    Range("P4") = WorksheetFunction.Max(Range("L2:L" & rowCount))
+
+    ' returns one less because header row not a factor
+    volMax = WorksheetFunction.Match(WorksheetFunction.Max(Range("K2:K" & rowCount)), Range("K2:K" & rowCount), 0)
+    volMin = WorksheetFunction.Match(WorksheetFunction.Min(Range("K2:K" & rowCount)), Range("K2:K" & rowCount), 0)
+    vol = WorksheetFunction.Match(WorksheetFunction.Max(Range("L2:L" & rowCount)), Range("L2:L" & rowCount), 0)
+
+    ' final ticker symbol for  total, greatest % of increase and decrease, and average
+    Range("O2") = Cells(volMax + 1, 9)
+    Range("O3") = Cells(volMin + 1, 9)
+    Range("O4") = Cells(vol + 1, 9)
 
 End Sub
+
+
