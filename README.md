@@ -16,7 +16,7 @@ by Libardo Lambrano
 
 This is the original database, it has six rows: `<ticker>`, `<date>`, `<open>`, `<high>`, `<low>`, `<close>`, `<vol>`. Tickers are organized organized by year (one per sheet). Here is an exsample of `2016` with 797K records.
 
-![](//VBAStocks/images/01_original_table.png)
+![](../-VBA-challenge/VBAStocks/images/01_original_table.png)
 
 **Step 1**
 
@@ -25,13 +25,13 @@ This is the original database, it has six rows: `<ticker>`, `<date>`, `<open>`, 
 * Conditional formating applied in column `J` to highlight positive and negative variances. 
 
 
-![](/VBAStocks/images/01_step1.png)
+![](../-VBA-challenge/VBAStocks/images/01_step1.png)
 
 **Step 2**
 
 * Append summary table including the stock with the largest and lowest percentage variance within a year, and the one with highest trading volume. 
 
-![](/VBAStocks/images/01_step2.png)
+![](../-VBA-challenge/VBAStocks/images/01_step2.png)
 
 
 
